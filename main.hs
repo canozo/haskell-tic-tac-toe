@@ -10,22 +10,29 @@ cambiar_elemento n nuevo_valor (x:xs)
 -- Ver si hay un ganador en una tabla
 -- ejemplos:
 -- ganador 'X' ['X', ' ', ' ', ' ', 'X', ' ', ' ', ' ', 'X', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
--- devuelve 'X'
+-- devuelve 'X' (porque X gana)
 -- ganador 'X' ['0', ' ', ' ', ' ', '0', ' ', ' ', ' ', '0', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
--- devuelve '0'
+-- devuelve '0' (porque 0 gana)
 -- ganador 'X' [' ', ' ', ' ', ' ', '0', ' ', ' ', ' ', '0', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
--- devuelve ' '
+-- devuelve ' ' (porque nadie gana)
 ganador :: Char -> [Char] -> Char
-ganador jugador lista = (rev_horizontal jugador lista) || (rev_vertical jugador lista) || (rev_diagonal jugador lista)
+ganador jugador lista =
+  if rev_horizontal jugador lista ||
+     rev_vertical jugador lista ||
+     rev_diagonal jugador lista
+  then jugador else ' '
 
 -- revisar si hay ganador de manera horizontal
 rev_horizontal :: Char -> [Char] -> Bool
+rev_horizontal _ _ = True
 
 -- revisar si hay ganador de manera vertical
 rev_vertical :: Char -> [Char] -> Bool
+rev_vertical _ _ = True
 
 -- revisar si hay ganador de manera diagonal
 rev_diagonal :: Char -> [Char] -> Bool
+rev_diagonal _ _ = True
 
 -- Ver si la lista esta llena
 -- ejemplos:
@@ -35,16 +42,16 @@ rev_diagonal :: Char -> [Char] -> Bool
 -- devuelve False
 lleno :: [Char] -> Bool
 lleno [] = True
-lleno (head : tail) = if (head == ' ') then False else lleno tail
+lleno (head : tail) = if head == ' ' then False else lleno tail
 
 -- Ver si puede mover y ejecuta el movimiento
 -- ejemplos:
--- mover 3 'X' ['X', '0', 'X', '0']
--- devuelve ['X', '0', 'X', '0']
+-- mover 3 'X' ['X', '0', '0', '0']
+-- devuelve ['X', '0', '0', '0']
 -- mover 3 'X' ['X', '0', 'X', ' ']
 -- devuelve ['X', '0', 'X', 'X']
 mover :: Int -> Char -> [Char] -> [Char]
-mover pos mov lista = if ((lista !! pos) == ' ') then (cambiar_elemento pos mov lista) else lista
+mover pos mov lista = if lista !! pos == ' ' then cambiar_elemento pos mov lista else lista
 
 main = do
   print("Hola")
