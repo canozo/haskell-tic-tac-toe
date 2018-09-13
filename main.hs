@@ -15,12 +15,12 @@ cambiar_elemento n nuevo_valor (x:xs)
 -- devuelve '0' (porque 0 gana)
 -- ganador 'X' [' ', ' ', ' ', ' ', '0', ' ', ' ', ' ', '0', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
 -- devuelve ' ' (porque nadie gana)
-ganador :: Char -> [Char] -> Char
+ganador :: Char -> [Char] -> Bool
 ganador jugador lista =
-  if rev_horizontal 0 0 0 jugador lista ||
-     rev_vertical 0 0 0 jugador lista ||
-     rev_diagonal jugador lista
-  then jugador else ' '
+  rev_horizontal 0 0 0 jugador lista ||
+  rev_vertical 0 0 0 jugador lista ||
+  rev_diagonal_id 0 0 0 jugador lista
+  -- rev_diagonal_di 0 0 0 jugador lista
 
 -- revisar si hay ganador de manera horizontal
 -- variables: pos, num de caracteres repetidos, num iteracion, char a buscar, lista, resultado
@@ -51,30 +51,47 @@ rev_horizontal pos cuenta iteracion jugador lista =
 -- variables: pos, num de caracteres repetidos, num iteracion, char a buscar, lista, resultado
 rev_vertical :: Int -> Int -> Int -> Char -> [Char] -> Bool
 rev_vertical pos cuenta iteracion jugador lista =
-  if pos == 16 then
-    -- se sale del valor maximo de la lista
-    False
-  else if lista !! pos == jugador then
+  if lista !! pos == jugador then
     -- si encuentra una casilla con el mismo valor X/0 del jugador
     if cuenta == 2 then
       -- contando la casilla actual, se encontraron 3 seguidos
       True
     else if iteracion < 3 then
       -- todavia no llega a los tres seguidos
-      rev_vertical (pos + 1) (cuenta + 1) (iteracion + 1) jugador lista
+      rev_vertical (pos + 4) (cuenta + 1) (iteracion + 1) jugador lista
     else
-      -- cambia de fila, empieza denuevo desde 0
-      rev_vertical (pos + 1) 0 0 jugador lista
+      -- en este caso es posible de que haya un desfase no deseado, lo verificamos:
+      if (pos + 1 - 4 * 3) /= 4 then
+        -- cambia de columna, empieza denuevo desde 0
+        rev_vertical (pos + 1 - 4 * 3) 0 0 jugador lista
+      else
+        -- estaria buscando la columna 5 (no existe)
+        False
   else if iteracion == 3 then
-    -- cambia de fila, empieza denuevo desde 0
-    rev_vertical (pos + 1) 0 0 jugador lista
+    -- en este caso es posible de que haya un desfase no deseado, lo verificamos:
+    if (pos + 1 - 4 * 3) /= 4 then
+      -- cambia de columna, empieza denuevo desde 0
+      rev_vertical (pos + 1 - 4 * 3) 0 0 jugador lista
+    else
+      -- estaria buscando la columna 5 (no existe)
+      False
   else
     -- no encontro una casilla con el mismo valor X/0 del jugador
-    rev_vertical (pos + 1) 0 (iteracion + 1) jugador lista
+    rev_vertical (pos + 4) 0 (iteracion + 1) jugador lista
 
--- revisar si hay ganador de manera diagonal
+-- revisar si hay ganador de manera diagonal, de izquierda a derecha
+-- variables: pos, num de caracteres repetidos, num iteracion, char a buscar, lista, resultado
+rev_diagonal_id :: Int -> Int -> Int -> Char -> [Char] -> Bool
+rev_diagonal_id pos cuenta iteracion jugador lista =
+  False
+
+-- modo yisus: revisar todos los casos a puros ifs
 rev_diagonal :: Char -> [Char] -> Bool
-rev_diagonal _ _ = True
+rev_diagonal jugador lista =
+  if lista !! 1 == jugador && lista !! 6 == jugador && lista !! 11 == jugador then
+    True
+  else if lista !! 4 == jugador && lista !! 9 == jugador && lista !! 14 == jugador then
+    True
 
 -- Ver si la lista esta llena
 -- ejemplos:
