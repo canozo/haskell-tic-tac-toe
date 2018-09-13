@@ -17,18 +17,60 @@ cambiar_elemento n nuevo_valor (x:xs)
 -- devuelve ' ' (porque nadie gana)
 ganador :: Char -> [Char] -> Char
 ganador jugador lista =
-  if rev_horizontal jugador lista ||
-     rev_vertical jugador lista ||
+  if rev_horizontal 0 0 0 jugador lista ||
+     rev_vertical 0 0 0 jugador lista ||
      rev_diagonal jugador lista
   then jugador else ' '
 
 -- revisar si hay ganador de manera horizontal
-rev_horizontal :: Char -> [Char] -> Bool
-rev_horizontal _ _ = True
+-- variables: pos, num de caracteres repetidos, num iteracion, char a buscar, lista, resultado
+rev_horizontal :: Int -> Int -> Int -> Char -> [Char] -> Bool
+rev_horizontal pos cuenta iteracion jugador lista =
+  if pos == 16 then
+    -- se sale del valor maximo de la lista
+    False
+  else if lista !! pos == jugador then
+    -- si encuentra una casilla con el mismo valor X/0 del jugador
+    if cuenta == 2 then
+      -- contando la casilla actual, se encontraron 3 seguidos
+      True
+    else if iteracion < 3 then
+      -- todavia no llega a los tres seguidos
+      rev_horizontal (pos + 1) (cuenta + 1) (iteracion + 1) jugador lista
+    else
+      -- cambia de fila, empieza denuevo desde 0
+      rev_horizontal (pos + 1) 0 0 jugador lista
+  else if iteracion == 3 then
+    -- cambia de fila, empieza denuevo desde 0
+    rev_horizontal (pos + 1) 0 0 jugador lista
+  else
+    -- no encontro una casilla con el mismo valor X/0 del jugador
+    rev_horizontal (pos + 1) 0 (iteracion + 1) jugador lista
 
 -- revisar si hay ganador de manera vertical
-rev_vertical :: Char -> [Char] -> Bool
-rev_vertical _ _ = True
+-- variables: pos, num de caracteres repetidos, num iteracion, char a buscar, lista, resultado
+rev_vertical :: Int -> Int -> Int -> Char -> [Char] -> Bool
+rev_vertical pos cuenta iteracion jugador lista =
+  if pos == 16 then
+    -- se sale del valor maximo de la lista
+    False
+  else if lista !! pos == jugador then
+    -- si encuentra una casilla con el mismo valor X/0 del jugador
+    if cuenta == 2 then
+      -- contando la casilla actual, se encontraron 3 seguidos
+      True
+    else if iteracion < 3 then
+      -- todavia no llega a los tres seguidos
+      rev_vertical (pos + 1) (cuenta + 1) (iteracion + 1) jugador lista
+    else
+      -- cambia de fila, empieza denuevo desde 0
+      rev_vertical (pos + 1) 0 0 jugador lista
+  else if iteracion == 3 then
+    -- cambia de fila, empieza denuevo desde 0
+    rev_vertical (pos + 1) 0 0 jugador lista
+  else
+    -- no encontro una casilla con el mismo valor X/0 del jugador
+    rev_vertical (pos + 1) 0 (iteracion + 1) jugador lista
 
 -- revisar si hay ganador de manera diagonal
 rev_diagonal :: Char -> [Char] -> Bool
