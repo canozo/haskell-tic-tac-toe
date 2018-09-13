@@ -19,8 +19,7 @@ ganador :: Char -> [Char] -> Bool
 ganador jugador lista =
   rev_horizontal 0 0 0 jugador lista ||
   rev_vertical 0 0 0 jugador lista ||
-  rev_diagonal_id 0 0 0 jugador lista
-  -- rev_diagonal_di 0 0 0 jugador lista
+  rev_diagonal 0 0 0 jugador lista
 
 -- revisar si hay ganador de manera horizontal
 -- variables: pos, num de caracteres repetidos, num iteracion, char a buscar, lista, resultado
@@ -85,13 +84,40 @@ rev_diagonal_id :: Int -> Int -> Int -> Char -> [Char] -> Bool
 rev_diagonal_id pos cuenta iteracion jugador lista =
   False
 
--- modo yisus: revisar todos los casos a puros ifs
+-- revisar si hay ganador de manera diagonal, de derecha a izquierda
+-- variables: pos, num de caracteres repetidos, num iteracion, char a buscar, lista, resultado
+rev_diagonal_di :: Int -> Int -> Int -> Char -> [Char] -> Bool
+rev_diagonal_di pos cuenta iteracion jugador lista =
+  False
+
+-- modo yisus: revisar todos los casos posibles
 rev_diagonal :: Char -> [Char] -> Bool
 rev_diagonal jugador lista =
-  if lista !! 1 == jugador && lista !! 6 == jugador && lista !! 11 == jugador then
-    True
-  else if lista !! 4 == jugador && lista !! 9 == jugador && lista !! 14 == jugador then
-    True
+  (lista !! 1  == jugador   &&
+   lista !! 6  == jugador   &&
+   lista !! 11 == jugador)  ||
+
+  (lista !! 4  == jugador   &&
+   lista !! 9  == jugador   &&
+   lista !! 14 == jugador)  ||
+
+  (lista !! 5  == jugador   &&
+   lista !! 10 == jugador   &&
+  (lista !! 0  == jugador   ||
+   lista !! 15 == jugador)) ||
+
+  (lista !! 2  == jugador   &&
+   lista !! 5  == jugador   &&
+   lista !! 8  == jugador)  ||
+
+  (lista !! 7  == jugador   &&
+   lista !! 10 == jugador   &&
+   lista !! 13 == jugador)  ||
+
+  (lista !! 6  == jugador   &&
+   lista !! 9  == jugador   &&
+  (lista !! 3  == jugador   ||
+   lista !! 12 == jugador))
 
 -- Ver si la lista esta llena
 -- ejemplos:
