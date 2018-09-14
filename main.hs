@@ -133,7 +133,10 @@ lleno (head : tail) = if head == ' ' then False else lleno tail
 -- comparar si dos listas son iguales
 -- se puede hacer con el operador ==
 
--- hacer un movimiento de computadora
+-- hacer un movimiento de computadora, devuelve la lista con el movimiento
+-- ejemplos:
+-- inteligencia '0' ['X', ' ', '0']
+-- devuelve ['X', '0', '0']
 inteligencia :: Char -> [Char] -> [Char]
 inteligencia jugador lista =
   if lleno lista then
