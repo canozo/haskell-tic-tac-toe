@@ -1,6 +1,7 @@
 -- Retornar una lista con un elemento reemplazado
 -- ejemplos:
--- cambiar_elemento 2 'X' ['X]
+-- cambiar_elemento 2 'X' ['X', '0', '0']
+-- devuelve ['X', '0', 'X']
 cambiar_elemento :: Int -> Char -> [Char] -> [Char]
 cambiar_elemento _ _ [] = []
 cambiar_elemento n nuevo_valor (x:xs)
@@ -19,7 +20,7 @@ ganador :: Char -> [Char] -> Bool
 ganador jugador lista =
   rev_horizontal 0 0 0 jugador lista ||
   rev_vertical 0 0 0 jugador lista ||
-  rev_diagonal 0 0 0 jugador lista
+  rev_diagonal jugador lista
 
 -- revisar si hay ganador de manera horizontal
 -- variables: pos, num de caracteres repetidos, num iteracion, char a buscar, lista, resultado
@@ -90,7 +91,7 @@ rev_diagonal_di :: Int -> Int -> Int -> Char -> [Char] -> Bool
 rev_diagonal_di pos cuenta iteracion jugador lista =
   False
 
--- modo yisus: revisar todos los casos posibles
+-- revisar todos los casos posibles
 rev_diagonal :: Char -> [Char] -> Bool
 rev_diagonal jugador lista =
   (lista !! 1  == jugador   &&
@@ -128,6 +129,19 @@ rev_diagonal jugador lista =
 lleno :: [Char] -> Bool
 lleno [] = True
 lleno (head : tail) = if head == ' ' then False else lleno tail
+
+-- comparar si dos listas son iguales
+-- se puede hacer con el operador ==
+
+-- hacer un movimiento de computadora
+inteligencia :: Char -> [Char] -> [Char]
+inteligencia jugador lista =
+  if lleno lista then
+    lista
+  else if head lista == ' ' then
+    mover 0 jugador lista
+  else
+    [head lista] ++ inteligencia jugador (tail lista)
 
 -- Ver si puede mover y ejecuta el movimiento
 -- ejemplos:
