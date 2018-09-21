@@ -1,5 +1,15 @@
 import Graphics.UI.Gtk
 
+-- "inteligencia" artificial
+inteligencia :: Char -> [Char] -> Int -> Int
+inteligencia jugador lista pos =
+  if pos > 15 then
+    -1
+  else if (lista !! pos) == ' ' then
+    pos
+  else
+    inteligencia jugador lista (pos + 1)
+
 -- ver si el tablero esta lleno
 lleno :: [Char] -> Bool
 lleno [] = True
@@ -182,11 +192,22 @@ mover button num titulo botones = do
       else if lleno tablero_actual then
         -- el tablero esta lleno, es empate
         set titulo [buttonLabel := "Empate!"]
-      else
+      else do
         -- hacer movimiento de computadora
-        -- construir un nuevo arreglo
-        -- ver si la compu gano
-        return ()
+        let mov_ai = inteligencia '0' tablero_actual 0
+        if mov_ai == -1 then
+          return ()
+        else do
+          -- cambiar el estado del boton # mov_ai
+          set (botones !! mov_ai) [buttonLabel := "0"]
+          -- construir un nuevo arreglo
+          let tablero_ai = cambiar_elemento mov_ai '0' tablero_actual
+          print(tablero_ai)
+          -- ver si la compu gano
+          if ganador '0' tablero_ai then
+            set titulo [buttonLabel := "Ganan las 0!"]
+          else
+            return ()
   else
     return ()
 
