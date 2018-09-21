@@ -17,3 +17,8 @@ tags
 
 # Persistent undo
 [._]*.un~
+
+# Haskell
+*.o
+*.hi
+main
