@@ -1,5 +1,9 @@
 import Graphics.UI.Gtk
 
+-- hacer esto pero mutable
+tablero = "                "
+
+
 -- Retornar una lista con un elemento reemplazado
 -- ejemplos:
 -- cambiar_elemento 2 'X' ['X', '0', '0']
@@ -115,15 +119,19 @@ rev_diagonal jugador lista =
    lista !! 12 == jugador))
 
 
-mover :: (ButtonClass o) => o -> Int -> o -> [o] -> [Char] -> IO ()
-mover button num titulo botones tablero = do
+mover :: ButtonClass o => o -> Int -> o -> [o] -> IO ()
+mover button num titulo botones = do
   label_anterior <- buttonGetLabel button
-  if label_anterior == " " then
+  if label_anterior == " " then do
     -- es un movimiento valido
     set button [buttonLabel := "X"]
+
+    -- cambiar en el tablero
     -- ver si gano
     -- hacer movimiento de computadora
     -- ver si la compu gano
+
+    return ()
   else
     -- la casilla ya esta ocupada
     set button [buttonLabel := label_anterior]
@@ -167,19 +175,16 @@ main = do
   button15 <- buttonNewWithLabel " "
   button16 <- buttonNewWithLabel " "
 
-  -- hacer un arreglo de caracteres que
-  let tablero = "                "
-
   -- hacer un arreglo con todos los botones
   let botones = [button1,
-                 button2 ,
-                 button3 ,
-                 button4 ,
-                 button5 ,
-                 button6 ,
-                 button7 ,
-                 button8 ,
-                 button9 ,
+                 button2,
+                 button3,
+                 button4,
+                 button5,
+                 button6,
+                 button7,
+                 button8,
+                 button9,
                  button10,
                  button11,
                  button12,
@@ -221,22 +226,22 @@ main = do
   boxPackStart hbox4 button16 PackGrow 0
 
   -- acciones de los botones
-  onClicked button1  (mover button1  0  button0 botones tablero)
-  onClicked button2  (mover button2  1  button0 botones tablero)
-  onClicked button3  (mover button3  2  button0 botones tablero)
-  onClicked button4  (mover button4  3  button0 botones tablero)
-  onClicked button5  (mover button5  4  button0 botones tablero)
-  onClicked button6  (mover button6  5  button0 botones tablero)
-  onClicked button7  (mover button7  6  button0 botones tablero)
-  onClicked button8  (mover button8  7  button0 botones tablero)
-  onClicked button9  (mover button9  8  button0 botones tablero)
-  onClicked button10 (mover button10 9  button0 botones tablero)
-  onClicked button11 (mover button11 10 button0 botones tablero)
-  onClicked button12 (mover button12 11 button0 botones tablero)
-  onClicked button13 (mover button13 12 button0 botones tablero)
-  onClicked button14 (mover button14 13 button0 botones tablero)
-  onClicked button15 (mover button15 14 button0 botones tablero)
-  onClicked button16 (mover button16 15 button0 botones tablero)
+  onClicked button1  (mover button1  0  button0 botones)
+  onClicked button2  (mover button2  1  button0 botones)
+  onClicked button3  (mover button3  2  button0 botones)
+  onClicked button4  (mover button4  3  button0 botones)
+  onClicked button5  (mover button5  4  button0 botones)
+  onClicked button6  (mover button6  5  button0 botones)
+  onClicked button7  (mover button7  6  button0 botones)
+  onClicked button8  (mover button8  7  button0 botones)
+  onClicked button9  (mover button9  8  button0 botones)
+  onClicked button10 (mover button10 9  button0 botones)
+  onClicked button11 (mover button11 10 button0 botones)
+  onClicked button12 (mover button12 11 button0 botones)
+  onClicked button13 (mover button13 12 button0 botones)
+  onClicked button14 (mover button14 13 button0 botones)
+  onClicked button15 (mover button15 14 button0 botones)
+  onClicked button16 (mover button16 15 button0 botones)
 
   onDestroy window mainQuit
   widgetShowAll window
