@@ -1,7 +1,9 @@
 import Graphics.UI.Gtk
 
--- hacer esto pero mutable
-tablero = "                "
+-- ver si el tablero esta lleno
+lleno :: [Char] -> Bool
+lleno [] = True
+lleno (head : tail) = if head == ' ' then False else lleno tail
 
 
 -- Retornar una lista con un elemento reemplazado
@@ -16,13 +18,6 @@ cambiar_elemento n nuevo_valor (x:xs)
 
 
 -- Ver si hay un ganador en una tabla
--- ejemplos:
--- ganador 'X' ['X', ' ', ' ', ' ', 'X', ' ', ' ', ' ', 'X', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
--- devuelve 'X' (porque X gana)
--- ganador 'X' ['0', ' ', ' ', ' ', '0', ' ', ' ', ' ', '0', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
--- devuelve '0' (porque 0 gana)
--- ganador 'X' [' ', ' ', ' ', ' ', '0', ' ', ' ', ' ', '0', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
--- devuelve ' ' (porque nadie gana)
 ganador :: Char -> [Char] -> Bool
 ganador jugador lista =
   rev_horizontal 0 0 0 jugador lista ||
@@ -119,23 +114,81 @@ rev_diagonal jugador lista =
    lista !! 12 == jugador))
 
 
+reset :: ButtonClass o => o -> o -> o -> o -> o -> o -> o -> o -> o -> o -> o -> o -> o -> o -> o -> o -> o -> IO ()
+reset b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 b15 b16 = do
+  set b0  [buttonLabel := "X/0"]
+  set b1  [buttonLabel := " "]
+  set b2  [buttonLabel := " "]
+  set b3  [buttonLabel := " "]
+  set b4  [buttonLabel := " "]
+  set b5  [buttonLabel := " "]
+  set b6  [buttonLabel := " "]
+  set b7  [buttonLabel := " "]
+  set b8  [buttonLabel := " "]
+  set b9  [buttonLabel := " "]
+  set b10 [buttonLabel := " "]
+  set b11 [buttonLabel := " "]
+  set b12 [buttonLabel := " "]
+  set b13 [buttonLabel := " "]
+  set b14 [buttonLabel := " "]
+  set b15 [buttonLabel := " "]
+  set b16 [buttonLabel := " "]
+
 mover :: ButtonClass o => o -> Int -> o -> [o] -> IO ()
 mover button num titulo botones = do
+  -- labels principales
   label_anterior <- buttonGetLabel button
-  if label_anterior == " " then do
-    -- es un movimiento valido
-    set button [buttonLabel := "X"]
+  label_titulo   <- buttonGetLabel titulo
 
-    -- cambiar en el tablero
-    -- ver si gano
-    -- hacer movimiento de computadora
-    -- ver si la compu gano
+  -- obtener todos los valores que tienen los botones
+  l0  <- buttonGetLabel (botones !! 0)
+  l1  <- buttonGetLabel (botones !! 1)
+  l2  <- buttonGetLabel (botones !! 2)
+  l3  <- buttonGetLabel (botones !! 3)
+  l4  <- buttonGetLabel (botones !! 4)
+  l5  <- buttonGetLabel (botones !! 5)
+  l6  <- buttonGetLabel (botones !! 6)
+  l7  <- buttonGetLabel (botones !! 7)
+  l8  <- buttonGetLabel (botones !! 8)
+  l9  <- buttonGetLabel (botones !! 9)
+  l10 <- buttonGetLabel (botones !! 10)
+  l11 <- buttonGetLabel (botones !! 11)
+  l12 <- buttonGetLabel (botones !! 12)
+  l13 <- buttonGetLabel (botones !! 13)
+  l14 <- buttonGetLabel (botones !! 14)
+  l15 <- buttonGetLabel (botones !! 15)
 
+  if label_titulo /= "X/0" then
     return ()
+  else if
+    l0  == " " || l1  == " " || l2  == " " || l3  == " " ||
+    l4  == " " || l5  == " " || l6  == " " || l7  == " " ||
+    l8  == " " || l9  == " " || l10 == " " || l11 == " " ||
+    l12 == " " || l13 == " " || l14 == " " || l15 == " "
+  then
+    if label_anterior /= " " then do
+      -- la casilla esta ocupada
+      return ()
+    else do
+      -- es un movimiento valido
+      set button [buttonLabel := "X"]
+      -- construir un nuevo arreglo
+      let tablero_anterior = l0  ++ l1  ++ l2  ++ l3  ++ l4  ++ l5  ++ l6  ++ l7  ++ l8  ++ l9  ++ l10 ++ l11 ++ l12 ++ l13 ++ l14 ++ l15
+      let tablero_actual = cambiar_elemento num 'X' tablero_anterior
+      print(tablero_actual)
+      -- ver si gano
+      if ganador 'X' tablero_actual then
+        set titulo [buttonLabel := "Ganan las X!"]
+      else if lleno tablero_actual then
+        -- el tablero esta lleno, es empate
+        set titulo [buttonLabel := "Empate!"]
+      else
+        -- hacer movimiento de computadora
+        -- construir un nuevo arreglo
+        -- ver si la compu gano
+        return ()
   else
-    -- la casilla ya esta ocupada
-    set button [buttonLabel := label_anterior]
-
+    return ()
 
 main :: IO ()
 main = do
@@ -226,6 +279,12 @@ main = do
   boxPackStart hbox4 button16 PackGrow 0
 
   -- acciones de los botones
+  onClicked button0 (reset button0
+    button1  button2  button3  button4
+    button5  button6  button7  button8
+    button9  button10 button11 button12
+    button13 button14 button15 button16)
+
   onClicked button1  (mover button1  0  button0 botones)
   onClicked button2  (mover button2  1  button0 botones)
   onClicked button3  (mover button3  2  button0 botones)
